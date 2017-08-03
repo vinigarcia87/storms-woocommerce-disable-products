@@ -8,7 +8,7 @@
  * @package   Storms
  * @version   3.0.0
  *
- * API\WC_API_Loja class
+ * API\SWDP_API_Shop class
  * Shop Control endpoint
  */
 
@@ -69,6 +69,7 @@ class SWDP_API_Shop extends \WC_REST_Controller
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
+
 	}
 
 	//<editor-fold desc="Enable Shop">

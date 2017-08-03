@@ -193,6 +193,22 @@ function update_product_blocked_callback( $value, $object ) {
 }
 
 /**
+ * Change product status - block or unblock
+ *
+ * @param int $product_id
+ * @param bool $block
+ */
+function swdp_change_product_status( $product_id, $block ) {
+    if( $block ) {
+        wp_update_post( [ 'ID' => $product_id, 'post_status' => 'draft' ] );
+        update_post_meta( $product_id, '_swdp_product_is_enable', 'no' );
+    } else {
+        wp_update_post( [ 'ID' => $product_id, 'post_status' => 'publish' ] );
+        update_post_meta( $product_id, '_swdp_product_is_enable', 'yes' );
+    }
+}
+
+/**
  * Enable/Disable WooCommerce Shop
  * @param bool $desabilitar
  */
@@ -215,5 +231,9 @@ function swdp_is_shop_disabled() {
 add_action( 'rest_api_init', function() {
     include_once('storms_rest_api_shop.php');
     $controller = new API\SWDP_API_Shop();
+    $controller->register_routes();
+
+    include_once('storms_rest_api_products.php');
+    $controller = new API\SWDP_API_Products();
     $controller->register_routes();
 });
