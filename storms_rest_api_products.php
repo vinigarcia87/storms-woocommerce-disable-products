@@ -26,7 +26,7 @@ class SWDP_API_Products extends \WC_REST_Products_Controller
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'wc-swdp/v1';
+	protected $namespace = 'wc-storms/v1';
 
 	/**
 	 * Route base.
@@ -43,7 +43,7 @@ class SWDP_API_Products extends \WC_REST_Products_Controller
         register_rest_route($this->namespace, '/' . $this->rest_base . '/(?P<sku>[a-zA-Z-0-9]+)/block', array(
             array(
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => array($this, 'block_product_by_sky'),
+                'callback' => array($this, 'block_product_by_sku'),
                 'permission_callback' => array($this, 'block_product_permissions_check'),
                 'args' => array(
                     'context' => $this->get_context_param(array('default' => 'view')),
@@ -54,7 +54,7 @@ class SWDP_API_Products extends \WC_REST_Products_Controller
         register_rest_route($this->namespace, '/' . $this->rest_base . '/(?P<sku>[a-zA-Z-0-9]+)/unblock', array(
             array(
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => array($this, 'unblock_product_by_sky'),
+                'callback' => array($this, 'unblock_product_by_sku'),
                 'permission_callback' => array($this, 'unblock_product_permissions_check'),
                 'args' => array(
                     'context' => $this->get_context_param(array('default' => 'view')),

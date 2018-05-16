@@ -26,7 +26,7 @@ class SWDP_API_Shop extends \WC_REST_Controller
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'wc-swdp/v1';
+	protected $namespace = 'wc-storms/v1';
 
 	/**
 	 * Route base.
