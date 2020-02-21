@@ -3,22 +3,20 @@
  * Storms Framework (http://storms.com.br/)
  *
  * @author    Vinicius Garcia | vinicius.garcia@storms.com.br
- * @copyright (c) Copyright 2012-2016, Storms Websolutions
+ * @copyright (c) Copyright 2012-2020, Storms Websolutions
  * @license   GPLv2 - GNU General Public License v2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package   Storms
  * @version   3.0.0
  *
- * API\SWDP_API_Shop class
+ * Storms_WC_Disable_Products_Shop_API class
  * Shop Control endpoint
  */
 
-namespace API;
-
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
-class SWDP_API_Shop extends \WC_REST_Controller
+class Storms_WC_Disable_Products_Shop_API extends \WC_REST_Controller
 {
 
 	/**
@@ -82,9 +80,9 @@ class SWDP_API_Shop extends \WC_REST_Controller
 	 */
 	public function set_enable( $request ) {
 
-        swdp_disable_shop( false );
+        swdp_enable_shop();
 
-		if( swdp_is_shop_disabled() ) {
+		if( ! swdp_is_shop_enabled() ) {
 			return new \WP_Error( 'storms_rest_cannot_enable', __( 'Sorry, could not enable the shop.', 'storms' ), array( 'status' => 400 ) );
 		}
 
@@ -110,7 +108,7 @@ class SWDP_API_Shop extends \WC_REST_Controller
 	 * @return \WP_Error|boolean
 	 */
 	public function set_enable_permissions_check( $request ) {
-		if ( ! wc_rest_check_user_permissions( 'create' ) ) {
+		if ( ! wc_rest_check_post_permissions( 'shop_order', 'create' ) ) {
 			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
@@ -129,9 +127,9 @@ class SWDP_API_Shop extends \WC_REST_Controller
 	 */
 	public function set_disable( $request ) {
 
-        swdp_disable_shop( true );
+		swdp_disable_shop();
 
-		if( ! swdp_is_shop_disabled() ) {
+		if( swdp_is_shop_enabled() ) {
 			return new \WP_Error( 'storms_rest_cannot_disable', __( 'Sorry, could not disable the shop.', 'storms' ), array( 'status' => 400 ) );
 		}
 
@@ -157,7 +155,7 @@ class SWDP_API_Shop extends \WC_REST_Controller
 	 * @return \WP_Error|boolean
 	 */
 	public function set_disable_permissions_check( $request ) {
-		if ( ! wc_rest_check_user_permissions( 'create' ) ) {
+		if ( ! wc_rest_check_post_permissions( 'shop_order', 'create' ) ) {
 			return new \WP_Error( 'woocommerce_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'woocommerce' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
@@ -176,7 +174,7 @@ class SWDP_API_Shop extends \WC_REST_Controller
 	 */
 	public function check_shop_status( $request ) {
 
-		$shop_status = ! swdp_is_shop_disabled();
+		$shop_status = swdp_is_shop_enabled();
 
 		$descp = $shop_status ? __( 'The shop is enabled', 'storms' ) : __( 'The shop is disabled', 'storms' );
 

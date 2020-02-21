@@ -3,22 +3,20 @@
  * Storms Framework (http://storms.com.br/)
  *
  * @author    Vinicius Garcia | vinicius.garcia@storms.com.br
- * @copyright (c) Copyright 2012-2016, Storms Websolutions
+ * @copyright (c) Copyright 2012-2020, Storms Websolutions
  * @license   GPLv2 - GNU General Public License v2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package   Storms
  * @version   3.0.0
  *
- * API\SWDP_API_Products class
+ * Storms_WC_Disable_Products_API class
  * Shop Control endpoint
  */
 
-namespace API;
-
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 
-class SWDP_API_Products extends \WC_REST_Products_Controller
+class Storms_WC_Disable_Products_API extends \WC_REST_Products_Controller
 {
 
 	/**
