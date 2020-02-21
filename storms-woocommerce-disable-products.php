@@ -31,7 +31,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function swdp_is_product_enable( $product_id ) {
 		$product_is_enable = get_post_meta( $product_id, '_swdp_product_is_enable', true );
-		return ( empty( $product_is_enable ) || $product_is_enable == 'yes' ? 'yes' : 'no' );
+		return ( empty( $product_is_enable ) || ( $product_is_enable == 'yes' ) ? 'yes' : 'no' );
 	}
 
 	/**
@@ -120,7 +120,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		if( $column == 'swdp_product_is_enable' ) {
 			// Verificamos se o produto esta habilitado
-			$product_is_enable = swdp_is_product_enable( $postid );
+			$product_is_enable = swdp_is_product_enable( $postid ) == 'yes';
 			echo ( $product_is_enable ? '<mark class="instock">' . __( 'Sim', 'storms' ) . '</mark>' : '<mark class="outofstock">' . __( 'Não', 'storms' ) . '</mark>' );
 		}
 	}
@@ -155,7 +155,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	 */
 	function swdp_check_if_is_purchasable( $is_purchasable, $product ) {
 		// Verificamos se o produto esta habilitado
-		$product_is_enable = swdp_is_product_enable( $product->get_id() );
+		$product_is_enable = swdp_is_product_enable( $product->get_id() ) == 'yes';
 		return ( $product_is_enable && swdp_is_shop_enabled() && $is_purchasable );
 	}
 	add_filter( 'woocommerce_is_purchasable', 'swdp_check_if_is_purchasable', 10, 2 );
@@ -169,7 +169,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function swdp_show_price( $price, $product ) {
 
 		// Verificamos se o produto esta habilitado
-		$product_is_enable = swdp_is_product_enable( $product->get_id() );
+		$product_is_enable = swdp_is_product_enable( $product->get_id() ) == 'yes';
 		if ( ! $product_is_enable || ! swdp_is_shop_enabled() ) {
 			return __( 'Não disponível', 'storms' );
 		}
@@ -186,7 +186,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	function swdp_loop_add_to_cart_link( $add_to_cart_link, $product ) {
 
 		// Verificamos se o produto esta habilitado
-		$product_is_enable = swdp_is_product_enable( $product->get_id() );
+		$product_is_enable = swdp_is_product_enable( $product->get_id() ) == 'yes';
 		if ( ! $product_is_enable || ! swdp_is_shop_enabled() ) {
 			return '';
 		}
