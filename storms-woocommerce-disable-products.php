@@ -42,6 +42,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		return ( get_option( '_swdp_enabled_shop', 'yes' ) == 'yes' );
 	}
 
+	/**
+	 * Check if we should show a unavailable message
+	 * @return bool
+	 */
+	function swdp_show_unavailable_msg() {
+		return ( get_option( '_swdp_show_unavailable_msg', 'yes' ) == 'yes' );
+	}
+
 	//</editor-fold>
 
 	//<editor-fold desc="Campo de habilitar na pagina do produto">
@@ -171,7 +179,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		// Verificamos se o produto esta habilitado
 		$product_is_enable = swdp_is_product_enable( $product->get_id() ) == 'yes';
 		if ( ! $product_is_enable || ! swdp_is_shop_enabled() ) {
-			return __( 'Não disponível', 'storms' );
+			if ( swdp_show_unavailable_msg() ) {
+				return __( 'Não disponível', 'storms' );
+			}
+			return '';
 		}
 		return $price;
 	}
@@ -292,6 +303,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		// The shop status has changed
 		do_action( 'swdp_after_disable_shop' );
+	}
+
+	function swdp_set_show_unavailable_msg( $show = true ) {
+		update_option( '_swdp_show_unavailable_msg', ( $show ? 'yes' : 'no' ) );
 	}
 
 	//</editor-fold>
