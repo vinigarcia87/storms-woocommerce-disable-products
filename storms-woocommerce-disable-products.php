@@ -305,8 +305,33 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		do_action( 'swdp_after_disable_shop' );
 	}
 
-	function swdp_set_show_unavailable_msg( $show = true ) {
+	/**
+	 * Set if we should show products prices as unavailable
+	 * Or not show prices at all - Not showing anything is better for catalog mode
+	 * Showing unavailable may be better for temporary deactivation of the website
+	 *
+	 * @param bool $show
+	 */
+	function swdp_show_products_as_unavailable( $show = true ) {
 		update_option( '_swdp_show_unavailable_msg', ( $show ? 'yes' : 'no' ) );
+	}
+
+	function swdp_activate_catalog_mode() {
+		if ( swdp_is_shop_enabled() ) {
+			swdp_disable_shop();
+
+			// Not show products as unavailable
+			swdp_show_products_as_unavailable( false );
+		}
+	}
+
+	function swdp_deactivate_catalog_mode() {
+		if ( ! swdp_is_shop_enabled() ) {
+			swdp_enable_shop();
+
+			// Set back to default value
+			swdp_show_products_as_unavailable( true );
+		}
 	}
 
 	//</editor-fold>
@@ -325,5 +350,21 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	add_action('rest_api_init', 'swdp_register_api_controllers' );
 
 	//</editor-fold>
+
+	/**
+	 * Add to BrandInfo dashboard widget if this store is active or inactive
+	 * BrandInfo dashboard widget is part of Storms Framework plugin
+	 *
+	 * @param array $theme_custom_info
+	 * @return array
+	 */
+	function swdp_storms_brandinfo_theme_custom_info( $theme_custom_info ) {
+
+		$ecomm_status = swdp_is_shop_enabled() ? 'LOJA HABILITADA' : 'CATALOGO HABILITADO';
+		$theme_custom_info[] = 'Ecommerce operando no modo: <strong>' . $ecomm_status . '</strong>';
+
+		return $theme_custom_info;
+	}
+	add_filter( 'storms_brandinfo_theme_custom_info', 'swdp_storms_brandinfo_theme_custom_info' );
 
 }
